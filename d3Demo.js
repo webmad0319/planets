@@ -17,7 +17,7 @@ var PI_DOUBLE = 2 * Math.PI;
 var PI_HALF = Math.PI / 2;
 
 // source: https://nssdc.gsfc.nasa.gov/planetary/factsheet/
-var data = [
+var planetData = [
     {
         name: "MERCURY",
         diameter: 4879,
@@ -65,29 +65,34 @@ var data = [
     }
 ]
 
-var planetScale = d3.scaleLinear().domain([Math.min.apply(null, data.map(x => x.diameter)), Math.max.apply(null, data.map(x => x.diameter))]).range([2, 20])
+var planetScale = d3.scaleLinear().domain([2370, 142984]).range([15, 150])
 
-var c = d3
+var canvas = d3
     .select("#canvas")
     .attr("height", h)
-    .attr("width", w)
+    .attr("width", w);
 
-c
+canvas
     .selectAll("circle")
-    .data(data)
+    .data(planetData)
     .enter()
     .append("circle")
-    .attr("r", d => planetScale(d.diameter))
-    .attr("cx", (d, i) => i * 150 + 100)
-    .attr("cy", h2)
-    .style("fill", d => d.color ? d.color : "red")
+    .attr("cx", (d, idx) => idx * 200 + 100)
+    .attr("cy", h / 2)
+    .attr("r", d => planetScale(d.diameter) )
+    .style("fill", d => d.color)
     .append("title")
     .text(d => d.name)
 
+
 document.querySelector("#b1").onclick = function () {
-    c.selectAll("circle")
+    canvas
+        .selectAll("circle")
         .transition()
         .duration(1000)
-        .ease(d3.easeBack)
-        .attr("r", d => planetScale(d.diameter) * 5)
+        .attr("r", 10)
+        .style("fill", "green")
 }
+
+
+
